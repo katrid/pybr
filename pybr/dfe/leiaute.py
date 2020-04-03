@@ -20,6 +20,7 @@ class Campo:
     regex: str = None
     dominio: str = None
     formato: str = None
+    prep_regex: str = None
     _is_list = False
     _min = _max = 0
     _required = False
@@ -27,7 +28,7 @@ class Campo:
     def __init__(
             self, ref=None, tipo: str=None, ocorrencias: Union[tuple, int]=None, tam=None, ele: str=None,
             campo: str=None, pai: str=None, default=None, descricao=None, nivel=None, regex=None, obs=None,
-            dominio=None, formato=None,
+            dominio=None, formato=None, prep_regex=None
     ):
         if ref is not None:
             self.ref = ref
@@ -57,6 +58,8 @@ class Campo:
             self.dominio = dominio
         if formato is not None:
             self.formato = formato
+        if prep_regex is not None:
+            self.prep_regex = prep_regex
 
         min_v = max_v = None
         if isinstance(self.ocorrencias, tuple):
@@ -152,11 +155,13 @@ class Elemento(Campo):
         el = etree.Element(self.campo)
         if value is not None:
             if self.tipo == 'N':
-                if isinstance(self.tam, tuple) and self.tam[1] < self.tam[0]:
+                if value == 0 and self._min:
+                    value = None
+                elif isinstance(self.tam, tuple) and self.tam[1] < self.tam[0]:
                     value = ('%%.%df' % self.tam[1]) % value
                 elif isinstance(self.tam, int):
                     value = int(value)
-                if self.formato:
+                if value and self.formato:
                     value = self.formato % value
             elif self.tipo == 'D':
                 if self.formato:
@@ -188,10 +193,11 @@ class Elemento(Campo):
 
     def _get_prep_value(self, value):
         if value is not None:
-            if isinstance(value, str) and self.regex:
-                value = ''.join(re.findall(self.regex, value))
+            if self.prep_regex:
+                value = ''.join(re.findall(self.prep_regex, value))
+
             if self.tipo == 'N':
-                if isinstance(self.tam, tuple):
+                if isinstance(self.tam, tuple) and self.tam[0] > self.tam[1]:
                     return Decimal(value)
                 return int(value)
         return value
@@ -266,6 +272,7 @@ class Grupo(Elemento, metaclass=TipoGrupo):
             if v is None:
                 continue
             if k == 'CPFCNPJ' or k == 'CNPJCPF':
+                v = ''.join(re.findall(r'\d+', v))
                 if len(v) == 11:
                     k = 'CPF'
                 elif len(v) == 14:
@@ -399,8 +406,10 @@ CE = Elemento
 
 
 def CampoCNPJ(**kwargs):
+    kwargs['prep_regex'] = r'\d+'
     return Elemento(formato='%014d', **kwargs)
 
 
 def CampoCPF(**kwargs):
+    kwargs['prep_regex'] = r'\d+'
     return Elemento(formato='%011d', **kwargs)
