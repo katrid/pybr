@@ -1,4 +1,5 @@
 import sys
+import re
 from decimal import Decimal
 from typing import List, Dict, Union
 from lxml import etree
@@ -187,6 +188,8 @@ class Elemento(Campo):
 
     def _get_prep_value(self, value):
         if value is not None:
+            if isinstance(value, str) and self.regex:
+                value = ''.join(re.findall(self.regex, value))
             if self.tipo == 'N':
                 if isinstance(self.tam, tuple):
                     return Decimal(value)
@@ -277,7 +280,7 @@ class Grupo(Elemento, metaclass=TipoGrupo):
                     else:
                         val._load(v)
                 else:
-                    self._values[k] = v
+                    self._values[k] = field._get_prep_value(v)
 
     def __len__(self):
         return len(self._children)
