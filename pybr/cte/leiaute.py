@@ -140,7 +140,7 @@ class rodo(G(ref=1, nivel=0, descricao='Informações do modal Rodoviário', oco
                 ocorrencias=(0, 1), tam=(1, 10), regex=ER36,
                 obs='Uso interno das transportadoras.'
             )
-            IE: str = E(ref=10, nivel=3, descricao='Inscrição Estadual', tipo='C', ocorrencias=(1, 1), tam=14, regex=ER29, prep_regex='\d+')
+            IE: str = E(ref=10, nivel=3, descricao='Inscrição Estadual', tipo='C', ocorrencias=(1, 1), tam=14, regex=ER29, prep_regex=r'\d+')
             UF: str = E(
                 ref=11, nivel=3, descricao='Sigla da UF', tipo='C', ocorrencias=(1, 1), tam=2, dominio=D10,
                 obs='Informar EX para operações com o exterior.'
@@ -184,7 +184,7 @@ class ferrov(G(ref=1, nivel=0, descricao='Informações do modal Ferroviário', 
                 ref=10, nivel=3, descricao='Código interno da Ferrovia envolvida', tipo='C', ocorrencias=(0, 1), tam=(1, 10), regex=ER36,
                 obs='Uso da transportadora'
             )
-            IE: str = E(ref=11, nivel=3, descricao='Inscrição Estadual', tipo='C', ocorrencias=(0, 1), tam=14, regex=ER29, prep_regex='\d+')
+            IE: str = E(ref=11, nivel=3, descricao='Inscrição Estadual', tipo='C', ocorrencias=(0, 1), tam=14, regex=ER29, prep_regex=r'\d+')
             xNome: str = E(ref=12, nivel=3, descricao='Razão Social ou Nome', tipo='C', ocorrencias=(1, 1), tam=(2, 60), regex=ER36)
 
             class enderFerro(
@@ -201,7 +201,7 @@ class ferrov(G(ref=1, nivel=0, descricao='Informações do modal Ferroviário', 
                     ref=19, nivel=4, descricao='Nome do município', tipo='C', ocorrencias=(1, 1), tam=(2, 60), regex=ER36,
                     obs='Informar EXTERIOR para operações com o exterior.'
                 )
-                CEP: str = E(ref=20, nivel=4, descricao='CEP', tipo='N', ocorrencias=(1, 1), tam=8, regex=ER41, prep_regex='\d+')
+                CEP: str = E(ref=20, nivel=4, descricao='CEP', tipo='N', ocorrencias=(1, 1), tam=8, regex=ER41, prep_regex=r'\d+')
                 UF: str = E(
                     ref=21, nivel=4, descricao='Sigla da UF', tipo='C', ocorrencias=(1, 1), tam=2, dominio=D10,
                     obs='Informar EX para operações com o exterior.'
@@ -439,14 +439,14 @@ class CTe(Grupo):
             class toma4(CG(ref=37, nivel=2, descricao='Indicador do "papel" do tomador do serviço no CT-e', ocorrencias=(1, 1))):
                 toma: str = E(ref=38, nivel=3, descricao='Tomador do Sref=erviço', tipo='N', ocorrencias=(1, 1), tam=1, dominio=D18, obs='Preencher com: 4 - Outros Obs: Informar os dados cadastrais do tomador do serviço')
                 CNPJ: str = CampoCNPJ(
-                    ref=39, nivel=3, descricao='Número do CNPJ', tipo='C', ocorrencias=(1, 1), tam=14, regex=ER8,
+                    ref=39, nivel=3, descricao='Número do CNPJ', tipo='C', ocorrencias=(0, 1), tam=14, regex=ER8,
                     obs='Em caso de empresa não estabelecida no Brasil, será informado o CNPJ com zeros. Informar os zeros não significativos.',
                 )
                 CPF: str = CampoCPF(
-                    ref=40, nivel=3, descricao='Número do CPF', tipo='C', ocorrencias=(1, 1), tam=11, regex=ER9,
+                    ref=40, nivel=3, descricao='Número do CPF', tipo='C', ocorrencias=(0, 1), tam=11, regex=ER9,
                     obs='Informar os zeros não significativos.',
                 )
-                IE: str = E(ref=41, nivel=3, descricao='Inscrição Estadual', tipo='C', ocorrencias=(0, 1), tam=14, regex=ER30, obs='Informar a IE do tomador ou ISENTO se tomador é contribuinte do ICMS isento de inscrição no cadastro de contribuintes do ICMS. Caso o tomador não seja contribuinte do ICMS não informar o conteúdo.', prep_regex='\d+')
+                IE: str = E(ref=41, nivel=3, descricao='Inscrição Estadual', tipo='C', ocorrencias=(0, 1), tam=14, regex=ER30, obs='Informar a IE do tomador ou ISENTO se tomador é contribuinte do ICMS isento de inscrição no cadastro de contribuintes do ICMS. Caso o tomador não seja contribuinte do ICMS não informar o conteúdo.', prep_regex=r'\d+')
                 xNome: str = E(ref=42, nivel=3, descricao='Razão Social ou Nome', tipo='C', ocorrencias=(1, 1), tam=(2, 60), regex=ER36)
                 xFant: str = E(ref=43, nivel=3, descricao='Nome Fantasia', tipo='C', ocorrencias=(0, 1), tam=(2, 60), regex=ER36)
                 fone: str = E(ref=44, nivel=3, descricao='Telefone', tipo='C', ocorrencias=(0, 1), tam=(6, 14), regex=ER6, prep_regex=r'\d+')
@@ -461,7 +461,7 @@ class CTe(Grupo):
                     CEP: str = E(
                         ref=52, nivel=4, descricao='CEP', tipo='C', ocorrencias=(0, 1), tam=8, regex=ER41,
                         obs='Informar os zeros não significativos',
-                        prep_regex='\d+'
+                        prep_regex=r'\d+'
                     )
                     UF: str = E(ref=53, nivel=4, descricao='Sigla da UF', tipo='C', ocorrencias=(1, 1), tam=2, dominio=D10, obs='Informar EX para operações com o exterior.')
                     cPais: str = E(ref=54, nivel=4, descricao='Código do país', tipo='N', ocorrencias=(0, 1), tam=(1, 4), regex=ER31, obs='Utilizar a tabela do BACEN')
@@ -469,8 +469,8 @@ class CTe(Grupo):
 
                 email: str = E(ref=56, nivel=3, descricao='Endereço de e-mail', tipo='C', ocorrencias=(0, 1), tam=(1, 60), regex=ER52)
 
-            dhCont: str = E(ref=57, nivel=2, descricao='Data e Hora da entrada em contingência', tipo='C', ocorrencias=(1, 1), tam=21, regex=ER1, obs='Informar a data e hora no formato AAAA-MM- DDTHH:MM:SS')
-            xJust: str = E(ref=58, nivel=2, descricao='Justificativa da entrada em contingência', tipo='C', ocorrencias=(1, 1), tam=(15, 256), regex=ER36)
+            dhCont: str = E(ref=57, nivel=2, descricao='Data e Hora da entrada em contingência', tipo='C', ocorrencias=(0, 1), tam=21, regex=ER1, obs='Informar a data e hora no formato AAAA-MM- DDTHH:MM:SS')
+            xJust: str = E(ref=58, nivel=2, descricao='Justificativa da entrada em contingência', tipo='C', ocorrencias=(0, 1), tam=(15, 256), regex=ER36)
 
         class compl(G(ref=59, nivel=1, descricao='Dados complementares do CT-e para fins operacionais ou comerciais', ocorrencias=(0, 1))):
             xCaracAd: str = E(ref=60, nivel=2, descricao='Característica adicional do transporte', tipo='C', ocorrencias=(0, 1), tam=(1, 15), regex=ER36, obs='Texto livre: REENTREGA; DEVOLUÇÃO; REFATURAMENTO; etc')
@@ -524,8 +524,8 @@ class CTe(Grupo):
 
         class emit(G(ref=97, nivel=1, descricao='Identificação do Emitente do CT-e', ocorrencias=(1, 1))):
             CNPJ: str = CampoCNPJ(ref=98, nivel=2, descricao='CNPJ do emitente', tipo='N', ocorrencias=(1, 1), tam=14, regex=ER5, obs='Informar zeros não significativos')
-            IE: str = E(ref=99, nivel=2, descricao='Inscrição Estadual do Emitente', tipo='C', ocorrencias=(1, 1), tam=14, regex=ER29, prep_regex='\d+')
-            IEST: str = E(ref=100, nivel=2, descricao='Inscrição Estadual do Substituto Tributário', tipo='C', ocorrencias=(0, 1), tam=14, regex=ER29, prep_regex='\d+')
+            IE: str = E(ref=99, nivel=2, descricao='Inscrição Estadual do Emitente', tipo='C', ocorrencias=(1, 1), tam=14, regex=ER29, prep_regex=r'\d+')
+            IEST: str = E(ref=100, nivel=2, descricao='Inscrição Estadual do Substituto Tributário', tipo='C', ocorrencias=(0, 1), tam=14, regex=ER29, prep_regex=r'\d+')
             xNome: str = E(ref=101, nivel=2, descricao='Razão social ou Nome do emitente', tipo='C', ocorrencias=(1, 1), tam=(2, 60), regex=ER36)
             xFant: str = E(ref=102, nivel=2, descricao='Nome fantasia', tipo='C', ocorrencias=(0, 1), tam=(2, 60), regex=ER36)
 
@@ -539,21 +539,21 @@ class CTe(Grupo):
                 CEP: str = E(
                     ref=110, nivel=3, descricao='CEP', tipo='N', ocorrencias=(0, 1), tam=8, regex=ER41,
                     obs='Informar zeros não significativos',
-                    prep_regex='\d+'
+                    prep_regex=r'\d+'
                 )
                 UF: str = E(ref=111, nivel=3, descricao='Sigla da UF', tipo='C', ocorrencias=(1, 1), tam=2, dominio=D11)
                 fone: str = E(ref=112, nivel=3, descricao='Telefone', tipo='C', ocorrencias=(0, 1), tam=(6, 14), regex=ER6, prep_regex=r'\d+')
 
         class rem(G(ref=113, nivel=1, descricao='Informações do Remetente das mercadorias transportadas pelo CT-e', ocorrencias=(0, 1))):
             CNPJ: str = CampoCNPJ(
-                ref=114, nivel=2, descricao='Número do CNPJ', tipo='C', ocorrencias=(1, 1), tam=14, regex=ER8,
+                ref=114, nivel=2, descricao='Número do CNPJ', tipo='C', ocorrencias=(0, 1), tam=14, regex=ER8,
                 obs='Em caso de empresa não estabelecida no Brasil, será informado o CNPJ com zeros. Informar os zeros não significativos.',
             )
             CPF: str = CampoCPF(
-                ref=115, nivel=2, descricao='Número do CPF', tipo='C', ocorrencias=(1, 1), tam=11, regex=ER9,
+                ref=115, nivel=2, descricao='Número do CPF', tipo='C', ocorrencias=(0, 1), tam=11, regex=ER9,
                 obs='A(ref= zeros não significativos.',
             )
-            IE: str = E(ref=116, nivel=2, descricao='Inscrição Estadual', tipo='C', ocorrencias=(0, 1), tam=14, regex=ER30, obs='Informar a IE do remetente ou ISENTO se remetente é contribuinte do ICMS isento de inscrição no cadastro de contribuintes do ICMS. Caso o remetente não seja contribuinte do ICMS não informar a tag.', prep_regex='\d+')
+            IE: str = E(ref=116, nivel=2, descricao='Inscrição Estadual', tipo='C', ocorrencias=(0, 1), tam=14, regex=ER30, obs='Informar a IE do remetente ou ISENTO se remetente é contribuinte do ICMS isento de inscrição no cadastro de contribuintes do ICMS. Caso o remetente não seja contribuinte do ICMS não informar a tag.', prep_regex=r'\d+')
             xNome: str = E(ref=117, nivel=2, descricao='Razão social ou nome do remetente', tipo='C', ocorrencias=(1, 1), tam=(2, 60), regex=ER36)
             xFant: str = E(ref=118, nivel=2, descricao='Nome fantasia', tipo='C', ocorrencias=(0, 1), tam=(2, 60), regex=ER36)
             fone: str = E(ref=119, nivel=2, descricao='Telefone', tipo='C', ocorrencias=(0, 1), tam=(6, 14), regex=ER6, prep_regex=r'\d+')
@@ -568,7 +568,7 @@ class CTe(Grupo):
                 CEP: str = E(
                     ref=127, nivel=3, descricao='CEP', tipo='C', ocorrencias=(0, 1), tam=8, regex=ER41, obs='Informar os zeros não significativos',
                     formato='%08d',
-                    prep_regex='\d+'
+                    prep_regex=r'\d+'
                 )
                 UF: str = E(ref=128, nivel=3, descricao='Sigla da UF', tipo='C', ocorrencias=(1, 1), tam=2, dominio=D10, obs='Informar EX para operações com o exterior.')
                 cPais: str = E(ref=129, nivel=3, descricao='Código do país', tipo='N', ocorrencias=(0, 1), tam=(1, 4), regex=ER31, obs='Utilizar a tabela do BACEN')
@@ -576,9 +576,9 @@ class CTe(Grupo):
             email: str = E(ref=131, nivel=2, descricao='Endereço de e-mail', tipo='C', ocorrencias=(0, 1), tam=(1, 60), regex=ER52)
 
         class exped(G(ref=132, nivel=1, descricao='Informações do Expedidor da Carga', ocorrencias=(0, 1))):
-            CNPJ: str = CampoCNPJ(ref=133, nivel=2, descricao='Número do CNPJ', tipo='C', ocorrencias=(1, 1), tam=14, regex=ER8, obs='Em caso de empresa não estabelecida no Brasil, será informado o CNPJ com zeros. Informar os zeros não significativos.',)
-            CPF: str = CampoCPF(ref=134, nivel=2, descricao='Número do CPF', tipo='C', ocorrencias=(1, 1), tam=11, regex=ER9, obs='Informar os zeros não significativos.')
-            IE: str = E(ref=135, nivel=2, descricao='Inscrição Estadual', tipo='C', ocorrencias=(0, 1), tam=14, regex=ER30, obs='Informar a IE do expedidor ou ISENTO se expedidor é contribuinte do ICMS isento de inscrição no cadastro de contribuintes do ICMS. Caso o expedidor não seja contribuinte do ICMS não informar a tag.', prep_regex='\d+')
+            CNPJ: str = CampoCNPJ(ref=133, nivel=2, descricao='Número do CNPJ', tipo='C', ocorrencias=(0, 1), tam=14, regex=ER8, obs='Em caso de empresa não estabelecida no Brasil, será informado o CNPJ com zeros. Informar os zeros não significativos.',)
+            CPF: str = CampoCPF(ref=134, nivel=2, descricao='Número do CPF', tipo='C', ocorrencias=(0, 1), tam=11, regex=ER9, obs='Informar os zeros não significativos.')
+            IE: str = E(ref=135, nivel=2, descricao='Inscrição Estadual', tipo='C', ocorrencias=(0, 1), tam=14, regex=ER30, obs='Informar a IE do expedidor ou ISENTO se expedidor é contribuinte do ICMS isento de inscrição no cadastro de contribuintes do ICMS. Caso o expedidor não seja contribuinte do ICMS não informar a tag.', prep_regex=r'\d+')
             xNome: str = E(ref=136, nivel=2, descricao='Razão Social ou Nome', tipo='C', ocorrencias=(1, 1), tam=(2, 60), regex=ER36)
             fone: str = E(ref=137, nivel=2, descricao='Telefone', tipo='C', ocorrencias=(0, 1), tam=(6, 14), regex=ER6, prep_regex=r'\d+')
 
@@ -592,7 +592,7 @@ class CTe(Grupo):
                 CEP: str = E(
                     ref=145, nivel=3, descricao='CEP', tipo='C', ocorrencias=(0, 1), tam=8, regex=ER41,
                     obs='Informar os zeros não significativos',
-                    prep_regex='\d+',
+                    prep_regex=r'\d+',
                 )
                 UF: str = E(ref=146, nivel=3, descricao='Sigla da UF', tipo='C', ocorrencias=(1, 1), tam=2, dominio=D10, obs='Informar EX para operações com o exterior.')
                 cPais: str = E(ref=147, nivel=3, descricao='Código do país', tipo='N', ocorrencias=(0, 1), tam=(1, 4), regex=ER31, obs='Utilizar a tabela do BACEN')
@@ -600,9 +600,9 @@ class CTe(Grupo):
             email: str = E(ref=149, nivel=2, descricao='Endereço de e-mail', tipo='C', ocorrencias=(0, 1), tam=(1, 60), regex=ER52)
 
         class receb(G(ref=150, nivel=1, descricao='Informações do Recebedor da Carga', ocorrencias=(0, 1))):
-            CNPJ: str = CampoCNPJ(ref=151, nivel=2, descricao='Número do CNPJ', tipo='C', ocorrencias=(1, 1), tam=14, regex=ER8, obs='Em caso de empresa não estabelecida no Brasil, será informado o CNPJ com zeros. Informar os zeros não significativos.')
-            CPF: str = CampoCPF(ref=152, nivel=2, descricao='Número do CPF', tipo='C', ocorrencias=(1, 1), tam=11, regex=ER9, obs='Informar os zeros não significativos.')
-            IE: str = E(ref=153, nivel=2, descricao='Inscrição Estadual', tipo='C', ocorrencias=(0, 1), tam=14, regex=ER30, obs='Informar a IE do recebedor ou ISENTO se recebedor é contribuinte do ICMS isento de inscrição no cadastro de contribuintes do ICMS. Caso o recebedor não seja contribuinte do ICMS não informar o conteúdo.', prep_regex='\d+')
+            CNPJ: str = CampoCNPJ(ref=151, nivel=2, descricao='Número do CNPJ', tipo='C', ocorrencias=(0, 1), tam=14, regex=ER8, obs='Em caso de empresa não estabelecida no Brasil, será informado o CNPJ com zeros. Informar os zeros não significativos.')
+            CPF: str = CampoCPF(ref=152, nivel=2, descricao='Número do CPF', tipo='C', ocorrencias=(0, 1), tam=11, regex=ER9, obs='Informar os zeros não significativos.')
+            IE: str = E(ref=153, nivel=2, descricao='Inscrição Estadual', tipo='C', ocorrencias=(0, 1), tam=14, regex=ER30, obs='Informar a IE do recebedor ou ISENTO se recebedor é contribuinte do ICMS isento de inscrição no cadastro de contribuintes do ICMS. Caso o recebedor não seja contribuinte do ICMS não informar o conteúdo.', prep_regex=r'\d+')
             xNome: str = E(ref=154, nivel=2, descricao='Razão Social ou Nome', tipo='C', ocorrencias=(1, 1), tam=(2, 60), regex=ER36)
             fone: str = E(ref=155, nivel=2, descricao='Telefone', tipo='C', ocorrencias=(0, 1), tam=(6, 14), regex=ER6, prep_regex=r'\d+')
 
@@ -615,7 +615,7 @@ class CTe(Grupo):
                 xMun: str = E(ref=162, nivel=3, descricao='Nome do município', tipo='C', ocorrencias=(1, 1), tam=(2, 60), regex=ER36, obs='Informar EXTERIOR para operações com o exterior.')
                 CEP: str = E(
                     ref=163, nivel=3, descricao='CEP', tipo='C', ocorrencias=(0, 1), tam=8, regex=ER41, obs='Informar os zeros não significativos',
-                    prep_regex='\d+',
+                    prep_regex=r'\d+',
                 )
                 UF: str = E(ref=164, nivel=3, descricao='Sigla da UF', tipo='C', ocorrencias=(1, 1), tam=2, dominio=D10, obs='Informar EX para operações com o exterior.')
                 cPais: str = E(ref=165, nivel=3, descricao='Código do país', tipo='N', ocorrencias=(0, 1), tam=(1, 4), regex=ER31, obs='Utilizar a tabela do BACEN')
@@ -623,9 +623,9 @@ class CTe(Grupo):
             email: str = E(ref=167, nivel=2, descricao='Endereço de e-mail', tipo='C', ocorrencias=(0, 1), tam=(1, 60), regex=ER52)
 
         class dest(G(ref=168, nivel=1, descricao='Informações do Destinatário do CT-e', ocorrencias=(0, 1))):
-            CNPJ: str = CampoCNPJ(ref=169, nivel=2, descricao='Número do CNPJ', tipo='C', ocorrencias=(1, 1), tam=14, regex=ER8, obs='Em caso de empresa não estabelecida no Brasil, será informado o CNPJ com zeros. Informar os zeros não significativos.')
-            CPF: str = CampoCPF(ref=170, nivel=2, descricao='Número do CPF', tipo='C', ocorrencias=(1, 1), tam=11, regex=ER9, obs='Informar os zeros não significativos.')
-            IE: str = E(ref=171, nivel=2, descricao='Inscrição Estadual', tipo='C', ocorrencias=(0, 1), tam=14, regex=ER30, obs='Informar a IE do destinatário ou ISENTO se destinatário é contribuinte do ICMS isento de inscrição no cadastro de contribuintes do ICMS. Caso o destinatário não seja contribuinte do ICMS não informar o conteúdo.', prep_regex='\d+')
+            CNPJ: str = CampoCNPJ(ref=169, nivel=2, descricao='Número do CNPJ', tipo='C', ocorrencias=(0, 1), tam=14, regex=ER8, obs='Em caso de empresa não estabelecida no Brasil, será informado o CNPJ com zeros. Informar os zeros não significativos.')
+            CPF: str = CampoCPF(ref=170, nivel=2, descricao='Número do CPF', tipo='C', ocorrencias=(0, 1), tam=11, regex=ER9, obs='Informar os zeros não significativos.')
+            IE: str = E(ref=171, nivel=2, descricao='Inscrição Estadual', tipo='C', ocorrencias=(0, 1), tam=14, regex=ER30, obs='Informar a IE do destinatário ou ISENTO se destinatário é contribuinte do ICMS isento de inscrição no cadastro de contribuintes do ICMS. Caso o destinatário não seja contribuinte do ICMS não informar o conteúdo.', prep_regex=r'\d+')
             xNome: str = E(ref=172, nivel=2, descricao='Razão Social ou Nome do destinatário', tipo='C', ocorrencias=(1, 1), tam=(2, 60), regex=ER36)
             fone: str = E(ref=173, nivel=2, descricao='Telefone', tipo='C', ocorrencias=(0, 1), tam=(6, 14), regex=ER6, prep_regex=r'\d+')
             ISUF: str = E(ref=174, nivel=2, descricao='Inscrição na SUFRAMA', tipo='N', ocorrencias=(0, 1), tam=(8, 9), regex=ER43, obs='(Obrigatório nas operações com as áreas com benefícios de incentivos fiscais sob controle da SUFRAMA)')
@@ -639,7 +639,7 @@ class CTe(Grupo):
                 xMun: str = E(ref=181, nivel=3, descricao='Nome do município', tipo='C', ocorrencias=(1, 1), tam=(2, 60), regex=ER36, obs='Informar EXTERIOR para operações com o exterior.')
                 CEP: str = E(
                     ref=182, nivel=3, descricao='CEP', tipo='C', ocorrencias=(0, 1), tam=8, regex=ER41, obs='Informar os zeros não significativos',
-                    prep_regex='\d+'
+                    prep_regex=r'\d+'
                 )
                 UF: str = E(ref=183, nivel=3, descricao='Sigla da UF', tipo='C', ocorrencias=(1, 1), tam=2, dominio=D10, obs='Informar EX para operações com o exterior.')
                 cPais: str = E(ref=184, nivel=3, descricao='Código do país', tipo='N', ocorrencias=(0, 1), tam=(1, 4), regex=ER31, obs='Utilizar a tabela do BACEN')
@@ -832,9 +832,9 @@ class CTe(Grupo):
             class docAnt(G(ref=333, nivel=2, descricao='Documentos de Transporte Anterior', ocorrencias=(0, 1))):
 
                 class emiDocAnt(G(ref=334, nivel=3, descricao='Emissor do documento anterior', ocorrencias=(1, -1))):
-                    CNPJ: str = CampoCNPJ(ref=335, nivel=4, descricao='Número do CNPJ', tipo='C', ocorrencias=(1, 1), tam=14, regex=ER8, obs='Em caso de empresa não estabelecida no Brasil, será informado o CNPJ com zeros. Informar os zeros não significativos.')
-                    CPF: str = CampoCPF(ref=336, nivel=4, descricao='Número do CPF', tipo='C', ocorrencias=(1, 1), tam=11, regex=ER9, obs='Informar os zeros não significativos.')
-                    IE: str = E(ref=337, nivel=4, descricao='Inscrição Estadual', tipo='N', ocorrencias=(1, 1), tam=14, regex=ER29, prep_regex='\d+')
+                    CNPJ: str = CampoCNPJ(ref=335, nivel=4, descricao='Número do CNPJ', tipo='C', ocorrencias=(0, 1), tam=14, regex=ER8, obs='Em caso de empresa não estabelecida no Brasil, será informado o CNPJ com zeros. Informar os zeros não significativos.')
+                    CPF: str = CampoCPF(ref=336, nivel=4, descricao='Número do CPF', tipo='C', ocorrencias=(0, 1), tam=11, regex=ER9, obs='Informar os zeros não significativos.')
+                    IE: str = E(ref=337, nivel=4, descricao='Inscrição Estadual', tipo='N', ocorrencias=(1, 1), tam=14, regex=ER29, prep_regex=r'\d+')
                     UF: str = E(ref=338, nivel=4, descricao='Sigla da UF', tipo='C', ocorrencias=(1, 1), tam=2, dominio=D10, obs='Informar EX para operações com o exterior.')
                     xNome: str = E(ref=339, nivel=4, descricao='Razão Social ou Nome do expedidor', tipo='C', ocorrencias=(1, 1), tam=(1, 60), regex=ER36)
 
@@ -887,8 +887,8 @@ class CTe(Grupo):
                     refNFe: str = CE(ref=373, nivel=4, descricao='Chave de acesso da NF-e emitida pelo Tomador', tipo='N', ocorrencias=(1, 1), tam=44, regex=ER4)
 
                     class refNF(CG(ref=374, nivel=4, descricao='Informação da NF ou CT emitido pelo Tomador', ocorrencias=(1, 1))):
-                        CNPJ: str = CampoCNPJ(ref=375, nivel=5, descricao='CNPJ do Emitente', tipo='N', ocorrencias=(1, 1), tam=14, regex=ER5, obs='Informar o CNPJ do emitente do Documento Fiscal')
-                        CPF: str = CampoCPF(ref=376, nivel=5, descricao='Número do CPF', tipo='N', ocorrencias=(1, 1), tam=11, regex=ER9, obs='Informar o CPF do emitente do documento fiscal')
+                        CNPJ: str = CampoCNPJ(ref=375, nivel=5, descricao='CNPJ do Emitente', tipo='N', ocorrencias=(0, 1), tam=14, regex=ER5, obs='Informar o CNPJ do emitente do Documento Fiscal')
+                        CPF: str = CampoCPF(ref=376, nivel=5, descricao='Número do CPF', tipo='N', ocorrencias=(0, 1), tam=11, regex=ER9, obs='Informar o CPF do emitente do documento fiscal')
                         mod: str = E(ref=377, nivel=5, descricao='Modelo do Documento Fiscal', tipo='C', ocorrencias=(1, 1), tam=2, dominio=D33)
                         serie: str = E(ref=378, nivel=5, descricao='Serie do documento fiscal', tipo='N', ocorrencias=(1, 1), tam=(1, 3), regex=ER34)
                         subserie: str = E(ref=379, nivel=5, descricao='Subserie do documento fiscal', tipo='N', ocorrencias=(0, 1), tam=(1, 3), regex=ER34)
@@ -914,8 +914,8 @@ class CTe(Grupo):
             dEmi: str = E(ref=394, nivel=2, descricao='Data de emissão da declaração do tomador não contribuinte do ICMS', tipo='D', ocorrencias=(1, 1), tam=10, regex=ER11)
 
         class autXML(G(ref=395, nivel=1, descricao='Autorizados para download do XML do DF-e', ocorrencias=(0, 10))):
-            CNPJ: str = CampoCNPJ(ref=396, nivel=2, descricao='CNPJ do autorizado', tipo='N', ocorrencias=(1, 1), tam=14, regex=ER5, obs='Informar zeros não significativos')
-            CPF: str = CampoCPF(ref=397, nivel=2, descricao='CPF do autorizado', tipo='N', ocorrencias=(1, 1), tam=11, regex=ER9, obs='Informar zeros não significativos')
+            CNPJ: str = CampoCNPJ(ref=396, nivel=2, descricao='CNPJ do autorizado', tipo='N', ocorrencias=(0, 1), tam=14, regex=ER5, obs='Informar zeros não significativos')
+            CPF: str = CampoCPF(ref=397, nivel=2, descricao='CPF do autorizado', tipo='N', ocorrencias=(0, 1), tam=11, regex=ER9, obs='Informar zeros não significativos')
 
         class infRespTec(G(ref=398, nivel=1, descricao='Informações do Responsável Técnico pela emissão do DF-e', ocorrencias=(0, 1))):
             CNPJ: str = CampoCNPJ(ref=399, nivel=2, descricao='CNPJ da pessoa jurídica responsável técnica pelo sistema utilizado na emissão do documento fiscal eletrônico', tipo='N', ocorrencias=(1, 1), tam=14, regex=ER5, obs='Informar o CNPJ da pessoa jurídica desenvolvedora do sistema utilizado na emissão do documento fiscal eletrônico.')
@@ -989,8 +989,8 @@ class infCteOs(G(ref=2, nivel=0, descricao='Informações do CT-e Outros Serviç
 
     class emit(G(ref=48, nivel=1, descricao='Identificação do Emitente do CT-e OS', ocorrencias=(1, 1))):
         CNPJ: str = CampoCNPJ(ref=49, nivel=2, descricao='CNPJ do emitente', tipo='N', ocorrencias=(1, 1), tam=14, regex=ER5, obs='Informar zeros não significativos')
-        IE: str = E(ref=50, nivel=2, descricao='Inscrição Estadual do Emitente', tipo='N', ocorrencias=(1, 1), tam=14, regex=ER29, prep_regex='\d+')
-        IEST: str = E(ref=51, nivel=2, descricao='Inscrição Estadual do Substituto Tributário', tipo='N', ocorrencias=(0, 1), tam=14, regex=ER29, prep_regex='\d+')
+        IE: str = E(ref=50, nivel=2, descricao='Inscrição Estadual do Emitente', tipo='N', ocorrencias=(1, 1), tam=14, regex=ER29, prep_regex=r'\d+')
+        IEST: str = E(ref=51, nivel=2, descricao='Inscrição Estadual do Substituto Tributário', tipo='N', ocorrencias=(0, 1), tam=14, regex=ER29, prep_regex=r'\d+')
         xNome: str = E(ref=52, nivel=2, descricao='Razão social ou Nome do emitente', tipo='C', ocorrencias=(1, 1), tam=(2, 60), regex=ER36)
         xFant: str = E(ref=53, nivel=2, descricao='Nome fantasia', tipo='C', ocorrencias=(0, 1), tam=(2, 60), regex=ER36)
 
@@ -1001,14 +1001,14 @@ class infCteOs(G(ref=2, nivel=0, descricao='Informações do CT-e Outros Serviç
             xBairro: str = E(ref=58, nivel=3, descricao='Bairro', tipo='C', ocorrencias=(1, 1), tam=(2, 60), regex=ER36)
             cMun: str = E(ref=59, nivel=3, descricao='Código do município (utilizar a tabela do IBGE)', tipo='N', ocorrencias=(1, 1), tam=7, regex=ER3)
             xMun: str = E(ref=60, nivel=3, descricao='Nome do município', tipo='C', ocorrencias=(1, 1), tam=(2, 60), regex=ER36)
-            CEP: str = E(ref=61, nivel=3, descricao='CEP', tipo='N', ocorrencias=(0, 1), tam=8, regex=ER41, obs='Informar zeros não significativos', prep_regex='\d+')
+            CEP: str = E(ref=61, nivel=3, descricao='CEP', tipo='N', ocorrencias=(0, 1), tam=8, regex=ER41, obs='Informar zeros não significativos', prep_regex=r'\d+')
             UF: str = E(ref=62, nivel=3, descricao='Sigla da UF', tipo='C', ocorrencias=(1, 1), tam=2, dominio=D11)
             fone: str = E(ref=63, nivel=3, descricao='Telefone', tipo='C', ocorrencias=(0, 1), tam=(6, 14), regex=ER6, prep_regex=r'\d+')
 
     class toma(G(ref=64, nivel=1, descricao='Informações do Tomador/Usuário do Serviço', ocorrencias=(0, 1))):
-        CNPJ: str = CampoCNPJ(ref=65, nivel=2, descricao='Número do CNPJ', tipo='C', ocorrencias=(1, 1), tam=14, regex=ER8, obs='Em caso de empresa não estabelecida no Brasil, será informado o CNPJ com zeros. Informar os zeros não significativos.')
-        CPF: str = CampoCPF(ref=66, nivel=2, descricao='Número do CPF', tipo='C', ocorrencias=(1, 1), tam=11, regex=ER9, obs='Informar os zeros não significativos.')
-        IE: str = E(ref=67, nivel=2, descricao='Inscrição Estadual', tipo='C', ocorrencias=(0, 1), tam=14, regex=ER30, obs='Informar a IE do tomador ou ISENTO se tomador é contribuinte do ICMS isento de inscrição no cadastro de contribuintes do ICMS. Caso o tomador não seja contribuinte do ICMS não informar o conteúdo.', prep_regex='\d+')
+        CNPJ: str = CampoCNPJ(ref=65, nivel=2, descricao='Número do CNPJ', tipo='C', ocorrencias=(0, 1), tam=14, regex=ER8, obs='Em caso de empresa não estabelecida no Brasil, será informado o CNPJ com zeros. Informar os zeros não significativos.')
+        CPF: str = CampoCPF(ref=66, nivel=2, descricao='Número do CPF', tipo='C', ocorrencias=(0, 1), tam=11, regex=ER9, obs='Informar os zeros não significativos.')
+        IE: str = E(ref=67, nivel=2, descricao='Inscrição Estadual', tipo='C', ocorrencias=(0, 1), tam=14, regex=ER30, obs='Informar a IE do tomador ou ISENTO se tomador é contribuinte do ICMS isento de inscrição no cadastro de contribuintes do ICMS. Caso o tomador não seja contribuinte do ICMS não informar o conteúdo.', prep_regex=r'\d+')
         xNome: str = E(ref=68, nivel=2, descricao='Razão social ou nome do tomador', tipo='C', ocorrencias=(1, 1), tam=(2, 60), regex=ER36)
         xFant: str = E(ref=69, nivel=2, descricao='Nome fantasia', tipo='C', ocorrencias=(0, 1), tam=(2, 60), regex=ER36)
         fone: str = E(ref=70, nivel=2, descricao='Telefone', tipo='C', ocorrencias=(0, 1), tam=(6, 14), regex=ER6, prep_regex=r'\d+')
@@ -1020,7 +1020,7 @@ class infCteOs(G(ref=2, nivel=0, descricao='Informações do CT-e Outros Serviç
             xBairro: str = E(ref=75, nivel=3, descricao='Bairro', tipo='C', ocorrencias=(1, 1), tam=(2, 60), regex=ER36)
             cMun: str = E(ref=76, nivel=3, descricao='Código do município (utilizar a tabela do IBGE)', tipo='N', ocorrencias=(1, 1), tam=7, regex=ER3, obs='Informar 9999999 para operações com o exterior.')
             xMun: str = E(ref=77, nivel=3, descricao='Nome do município', tipo='C', ocorrencias=(1, 1), tam=(2, 60), regex=ER36, obs='Informar EXTERIOR para operações com o exterior.')
-            CEP: str = E(ref=78, nivel=3, descricao='CEP', tipo='C', ocorrencias=(0, 1), tam=8, regex=ER41, obs='Informar os zeros não significativos', prep_regex='\d+')
+            CEP: str = E(ref=78, nivel=3, descricao='CEP', tipo='C', ocorrencias=(0, 1), tam=8, regex=ER41, obs='Informar os zeros não significativos', prep_regex=r'\d+')
             UF: str = E(ref=79, nivel=3, descricao='Sigla da UF', tipo='C', ocorrencias=(1, 1), tam=2, dominio=D10, obs='Informar EX para operações com o exterior.')
             cPais: str = E(ref=80, nivel=3, descricao='Código do país', tipo='N', ocorrencias=(0, 1), tam=(1, 4), regex=ER31, obs='Utilizar a tabela do BACEN')
             xPais: str = E(ref=81, nivel=3, descricao='Nome do país', tipo='C', ocorrencias=(0, 1), tam=(2, 60), regex=ER36)
@@ -1134,11 +1134,11 @@ class infCteOs(G(ref=2, nivel=0, descricao='Informações do CT-e Outros Serviç
                                  descricao='Proprietários do Veículo. Só preenchido quando o veículo não pertencer à empresa emitente do CT-e OS',
                                  ocorrencias=(0, 1))):
                         CPF: str = CampoCPF(
-                            ref=8, nivel=3, descricao='Número do CPF', tipo='C', ocorrencias=(1, 1), tam=11, regex=ER9,
+                            ref=8, nivel=3, descricao='Número do CPF', tipo='C', ocorrencias=(0, 1), tam=11, regex=ER9,
                             obs='Informar os zeros não significativos.'
                         )
                         CNPJ: str = CampoCNPJ(
-                            ref=9, nivel=3, descricao='Número do CNPJ', tipo='C', ocorrencias=(1, 1), tam=14, regex=ER8,
+                            ref=9, nivel=3, descricao='Número do CNPJ', tipo='C', ocorrencias=(0, 1), tam=14, regex=ER8,
                             obs='Informar os zeros não significativos.'
                         )
                         TAF: str = CE(
@@ -1150,7 +1150,7 @@ class infCteOs(G(ref=2, nivel=0, descricao='Informações do CT-e Outros Serviç
                             obs='Registro obrigatório do emitente do CT-e OS junto à Agência Reguladora Estadual'
                         )
                         xNome: str = E(ref=12, nivel=3, descricao='Razão Social ou Nome do proprietário', tipo='C', ocorrencias=(1, 1), tam=(2, 60), regex=ER36)
-                        IE: str = E(ref=13, nivel=3, descricao='Inscrição Estadual', tipo='C', ocorrencias=(1, 1), tam=14, regex=ER30, prep_regex='\d+')
+                        IE: str = E(ref=13, nivel=3, descricao='Inscrição Estadual', tipo='C', ocorrencias=(1, 1), tam=14, regex=ER30, prep_regex=r'\d+')
                         UF: str = E(ref=14, nivel=3, descricao='UF', tipo='C', ocorrencias=(1, 1), tam=2, dominio=D10)
                         tpProp: str = E(
                             ref=15, nivel=3, descricao='Tipo Proprietário', tipo='N', ocorrencias=(1, 1), tam=1, dominio=D40,
@@ -1181,8 +1181,8 @@ class infCteOs(G(ref=2, nivel=0, descricao='Informações do CT-e Outros Serviç
                 refNFe: str = CE(ref=158, nivel=4, descricao='Chave de acesso da NF-e emitida pelo Tomador', tipo='N', ocorrencias=(1, 1), tam=44, regex=ER4)
 
                 class refNF(CG(ref=159, nivel=4, descricao='Informação da NF ou CT emitido pelo Tomador', ocorrencias=(1, 1))):
-                    CNPJ: str = CampoCNPJ(ref=160, nivel=5, descricao='CNPJ do Emitente', tipo='N', ocorrencias=(1, 1), tam=14, regex=ER5, obs='Informar o CNPJ do emitente do Documento Fiscal')
-                    CPF: str = CampoCPF(ref=161, nivel=5, descricao='Número do CPF', tipo='N', ocorrencias=(1, 1), tam=11, regex=ER9, obs='Informar o CPF do emitente do documento fiscal')
+                    CNPJ: str = CampoCNPJ(ref=160, nivel=5, descricao='CNPJ do Emitente', tipo='N', ocorrencias=(0, 1), tam=14, regex=ER5, obs='Informar o CNPJ do emitente do Documento Fiscal')
+                    CPF: str = CampoCPF(ref=161, nivel=5, descricao='Número do CPF', tipo='N', ocorrencias=(0, 1), tam=11, regex=ER9, obs='Informar o CPF do emitente do documento fiscal')
                     mod: str = E(ref=162, nivel=5, descricao='Modelo do Documento Fiscal', tipo='C', ocorrencias=(1, 1), tam=2, dominio=D33)
                     serie: str = E(ref=163, nivel=5, descricao='Serie do documento fiscal', tipo='N', ocorrencias=(1, 1), tam=(1, 3), regex=ER34)
                     subserie: str = E(ref=164, nivel=5, descricao='Subserie do documento fiscal', tipo='N', ocorrencias=(0, 1), tam=(1, 3), regex=ER34)
@@ -1213,8 +1213,8 @@ class infCteOs(G(ref=2, nivel=0, descricao='Informações do CT-e Outros Serviç
         dEmi: str = E(ref=184, nivel=2, descricao='Data de emissão da declaração do tomador não contribuinte do ICMS', tipo='D', ocorrencias=(1, 1), tam=10, regex=ER11)
 
     class autXML(G(ref=185, nivel=1, descricao='Autorizados para download do XML do DF-e', ocorrencias=(0, 10))):
-        CNPJ: str = CampoCNPJ(ref=186, nivel=2, descricao='CNPJ do autorizado', tipo='N', ocorrencias=(1, 1), tam=14, regex=ER5, obs='Informar zeros não significativos')
-        CPF: str = CampoCPF(ref=187, nivel=2, descricao='CPF do autorizado', tipo='N', ocorrencias=(1, 1), tam=11, regex=ER9, obs='Informar zeros não significativos')
+        CNPJ: str = CampoCNPJ(ref=186, nivel=2, descricao='CNPJ do autorizado', tipo='N', ocorrencias=(0, 1), tam=14, regex=ER5, obs='Informar zeros não significativos')
+        CPF: str = CampoCPF(ref=187, nivel=2, descricao='CPF do autorizado', tipo='N', ocorrencias=(0, 1), tam=11, regex=ER9, obs='Informar zeros não significativos')
 
     class infRespTec(G(ref=188, nivel=1, descricao='Informações do Responsável Técnico pela emissão do DF-e', ocorrencias=(0, 1))):
         CNPJ: str = CampoCNPJ(ref=189, nivel=2, descricao='CNPJ da pessoa jurídica responsável técnica pelo sistema utilizado na emissão do documento fiscal eletrônico', tipo='N', ocorrencias=(1, 1), tam=14, regex=ER5, obs='Informar o CNPJ da pessoa jurídica desenvolvedora do sistema utilizado na emissão do documento fiscal eletrônico.')

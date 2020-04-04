@@ -73,6 +73,9 @@ class Campo:
         if self._min:
             self._required = True
 
+        if isinstance(self.dominio, str):
+            self.dominio = [self.dominio]
+
     def __set_name__(self, owner, name):
         if not self.campo:
             self.campo = name
@@ -89,10 +92,13 @@ class Campo:
     def _validate(self, value, raise_error=True):
         errors = []
 
+        old_val = value
+        value = self._render_value(value)
+
         # Validar pelas ocorrências
         if self._required and not value and value != 0:
             errors.append('(%s) - A tag "%s" é obrigatória.' % (self.ref, self.campo))
-        elif self._min != self._max:
+        elif self._min != self._max and self._max > 1:
             min_v, max_v = self._min, self._max
             if value is None:
                 value = []
@@ -108,7 +114,7 @@ class Campo:
                 errors.append('(%s) - A tag "%s" é obrigatória.' % (self.ref, self.campo))
 
         # Validar pelo tamanho
-        if isinstance(self.tam, tuple) and not errors:
+        if self._min and isinstance(self.tam, tuple) and not errors and self.tipo == 'C':
             if value is None:
                 value = ''
             else:
@@ -118,9 +124,19 @@ class Campo:
             if count > max_v or count < min_v:
                 errors.append('(%s) - Valor informado inválido para a tag "%s", é necessário informar entre %s e %s caracteres' % (self.ref, self.campo, min_v, max_v))
 
-        # Validar pelo tipo
-        if self.tipo == 'N':
-            pass
+        # Validar pela regex
+        if isinstance(value, str) and self.regex:
+            if not re.match(self.regex, value):
+                if not (not self._min and self.tipo == 'N' and not old_val):
+                    errors.append('(%s) - Valor informado inválido para a tag "%s".' % (self.ref, self.campo))
+
+
+        # Validar pelo domínio
+        if value is not None and not errors and self.dominio:
+            if value not in self.dominio:
+                errors.append(
+                    '(%s) - Valor informado inválido para a tag "%s", os valores possíveis são os seguinted: %s' % (self.ref, value, self.dominio)
+                )
 
         return errors
 
@@ -130,34 +146,12 @@ class Campo:
         return instance._values.get(self.campo)
 
     def __set__(self, instance, value):
-        instance._values[self.campo] = self._get_prep_value(value)
+        instance._values[self.campo] = self._get_prep_value(value) if value is not None else value
 
-
-class Atributo(Campo):
-    ele = 'A'
-
-    def _render(self, parent: etree.Element, value):
-        if isinstance(value, float):
-            value = '%.2f' % value
-        parent.attrib[self.campo] = value
-
-    def _get_prep_value(self, value):
-        if self.tam == '1-2v2':
-            return float(value)
-        return value
-
-
-class Elemento(Campo):
-    _fields: Dict = None
-    ele = 'E'
-
-    def _render(self, parent: etree.Element, value=None):
-        el = etree.Element(self.campo)
+    def _render_value(self, value):
         if value is not None:
             if self.tipo == 'N':
-                if value == 0 and self._min:
-                    value = None
-                elif isinstance(self.tam, tuple) and self.tam[1] < self.tam[0]:
+                if isinstance(self.tam, tuple) and self.tam[1] < self.tam[0]:
                     value = ('%%.%df' % self.tam[1]) % value
                 elif isinstance(self.tam, int):
                     value = int(value)
@@ -171,7 +165,33 @@ class Elemento(Campo):
             value = str(value).strip()
             if self.tipo == 'CDATA':
                 value = etree.CDATA(value)
-            el.text = value
+        return value
+
+
+class Atributo(Campo):
+    ele = 'A'
+
+    def _render_value(self, value):
+        if self.tam == '1-2v2' and isinstance(value, float):
+            value = '%.2f' % value
+        return value
+
+    def _render(self, parent: etree.Element, value):
+        parent.attrib[self.campo] = self._render_value(value)
+
+    def _get_prep_value(self, value):
+        if self.tam == '1-2v2':
+            return float(value)
+        return value
+
+
+class Elemento(Campo):
+    _fields: Dict = None
+    ele = 'E'
+
+    def _render(self, parent: etree.Element, value=None):
+        el = etree.Element(self.campo)
+        value = self._render_value(value)
         has_value = bool(value)
         if self._fields:
             for field in self._fields.values():
@@ -266,6 +286,9 @@ class Grupo(Elemento, metaclass=TipoGrupo):
     #     self._children.append(item)
     #     return item
 
+    def __bool__(self):
+        return any(self._values.values())
+
     def _load(self, obj, parent=None):
         """Carregar dados do documento a partir de um dict"""
         for k, v in obj.items():
@@ -286,7 +309,7 @@ class Grupo(Elemento, metaclass=TipoGrupo):
                             val.add()._load(obj)
                     else:
                         val._load(v)
-                else:
+                elif v is not None:
                     self._values[k] = field._get_prep_value(v)
 
     def __len__(self):
@@ -329,11 +352,15 @@ class Grupo(Elemento, metaclass=TipoGrupo):
 
     def _validate(self, value=None, raise_error=False):
         errors = {}
-        if isinstance(value, list):
+        if value is None:
+            value = self
+        elif isinstance(value, list):
             return super()._validate(value)
-        elif value is None:
-            for f in self._fields.values():
-                error = f._validate(self._values.get(f.campo))
+
+        for f in self._fields.values():
+            if value:
+                val = value._values.get(f.campo)
+                error = f._validate(val)
                 if error:
                     errors[f.campo] = error
         return errors

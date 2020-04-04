@@ -83,11 +83,12 @@ class DFe:
         with open(arquivo_xml, 'rb') as f:
             self.documentos.add()._read_xml(etree.fromstring(f.read()))
 
-    def enviar(self, lote: int=None):
+    def enviar(self, lote: int=None, validar=True):
         """Enviar todos os documentos para processamento."""
         self.recepcao.clear()
         envi = self.recepcao.xml
         res = []
+        erros = []
         if self.documentos:
             tag = getattr(envi, self.documentos[0].campo, None)
             # validar a tag de recepção
@@ -98,14 +99,19 @@ class DFe:
                 # gerar chave antes de prosseguir
                 doc._preparar(self)
 
+                if validar:
+                    erro = doc._validate()
+                    if erro:
+                        erros.append(erro)
                 xml = doc._to_xml()
                 self.assinar(doc, doc, xml)
                 tag.append(doc)
                 print(etree.tostring(xml))
                 res.append(xml)
             envi.idLote = lote
-        self.recepcao.executar()
-        return res
+        if not erros:
+            self.recepcao.executar()
+        return res, erros
 
 
 class Documentos(list):
