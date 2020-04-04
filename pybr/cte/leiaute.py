@@ -609,7 +609,7 @@ class CTe(Grupo):
             class enderReceb(G(ref=156, nivel=2, descricao='Dados do endereço', ocorrencias=(1, 1))):
                 xLgr: str = E(ref=157, nivel=3, descricao='Logradouro', tipo='C', ocorrencias=(1, 1), tam=(2, 255), regex=ER36)
                 nro: str = E(ref=158, nivel=3, descricao='Número', tipo='C', ocorrencias=(1, 1), tam=(1, 60), regex=ER36)
-                xCpl: str = E(ref=159, nivel=3, descricao='Complemento', tipo='C', ocorrencias=(0, 1), tam=(1, 60), regex=ER36)
+                xCplr: str = E(ref=159, nivel=3, descricao='Complemento', tipo='C', ocorrencias=(0, 1), tam=(1, 60), regex=ER36)
                 xBairro: str = E(ref=160, nivel=3, descricao='Bairro', tipo='C', ocorrencias=(1, 1), tam=(2, 60), regex=ER36)
                 cMun: str = E(ref=161, nivel=3, descricao='Código do município (utilizar a tabela do IBGE)', tipo='N', ocorrencias=(1, 1), tam=7, regex=ER3, obs='Informar 9999999 para operações com o exterior.')
                 xMun: str = E(ref=162, nivel=3, descricao='Nome do município', tipo='C', ocorrencias=(1, 1), tam=(2, 60), regex=ER36, obs='Informar EXTERIOR para operações com o exterior.')
