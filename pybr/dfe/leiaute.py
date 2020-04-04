@@ -149,6 +149,8 @@ class Campo:
         instance._values[self.campo] = self._get_prep_value(value) if value is not None else value
 
     def _render_value(self, value):
+        if self.tipo == 'N' and not self._min and not value:
+            value = None
         if value is not None:
             if self.tipo == 'N':
                 if isinstance(self.tam, tuple) and self.tam[1] < self.tam[0]:
@@ -191,8 +193,11 @@ class Elemento(Campo):
 
     def _render(self, parent: etree.Element, value=None):
         el = etree.Element(self.campo)
-        value = self._render_value(value)
+        if not isinstance(value, Grupo):
+            value = self._render_value(value)
         has_value = bool(value)
+        if has_value:
+            el.text = value
         if self._fields:
             for field in self._fields.values():
                 if field._is_list:
